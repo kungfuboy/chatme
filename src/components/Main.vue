@@ -2,17 +2,17 @@
   <div class="content">
     <div class="title">{{inputing ? '对方正在输入……' : '和夜鹰聊天中'}}</div>
     <div class="input" @click="saySome">{{inputing ? '夜鹰打字中……' : '说点什么吧...'}}</div>
-    <div class="talk" v-show="talkShow">
+    <div class="talk" v-show="talkShow" @click="talkShow = false">
       <ul>
         <li v-for="(item, index) in options" :key="index" @click="talkData(item)">{{item}}</li>
       </ul>
     </div>
     <ul class="chat-list" ref="chat">
-      <li v-for="(item, index) in talkArr" :key="index">
-        <span :class="item.type">{{item.value}}</span>
+      <li v-for="(item, index) in talkArr" :class="item.type" :key="index">
+        <span>{{item.value}}</span>
       </li>
-      <li v-show="inputing">
-        <span class="answer">
+      <li class="answer" v-show="inputing">
+        <span>
           <i class="dot"></i>
           <i class="dot"></i>
           <i class="dot"></i>
@@ -49,25 +49,28 @@ export default class Main extends Vue {
   }
 
   private talkData(data: string): void {
-    this.updateScroll()
     this.talkShow = false
     this.inputing = true    // 输入状态
 
+    // 提问处理
     this.talkArr.push({ 
       type: 'question',
       value: data 
     })
+    this.updateScroll()
+
+    // 回答处理
     this.options = talkJson[data].select
 
     const ansData = talkJson[data].answer
     const len = ansData.length - 1
     let i = 0
     const timer = setInterval(() => {
-      if(i === len) {
+      this.pushData(ansData[i])
+      if(i >= len) {
         clearInterval(timer)
         this.inputing = false   // 非输入状态
       }
-      this.pushData(ansData[i])
       this.updateScroll()
       i++
     }, 1200)
@@ -81,7 +84,17 @@ export default class Main extends Vue {
   }
 
   private updateScroll(): void {
-    this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
+    const $dom = this.$refs.chat
+
+    const distance = $dom.scrollHeight - $dom.offsetHeight;
+    const duration = 250;
+    const startTime = Date.now();
+
+    requestAnimationFrame(function step() {
+        const p = Math.min(1, (Date.now() - startTime) / duration);
+        $dom.scrollTop = $dom.scrollTop + distance * p
+        p < 1 && requestAnimationFrame(step);
+    })
   }
 }
 </script>
@@ -104,32 +117,36 @@ export default class Main extends Vue {
     margin: 0;
     height: 100%;
     overflow: auto;
-    padding: 15px;
+    padding: 0 15px;
     box-sizing: border-box;
     li {
       list-style: none;
       padding: 0;
-      display: block;
+      display: flex;
       overflow: auto;
-      clear: both;
-      span {
-        padding: 6px 15px;
-        max-width: 65%;
-        display: inline-block;
-        box-shadow: 0 0 4px #94beb1;
-        overflow: hidden;
-        word-wrap: break-word;
-        &.answer {
-        background: #fff;
-        border-radius: 0 20px 20px 20px;
+      margin: 8px 0;
+      &.answer {
+        justify-content: flex-start;
+        span {
+          background: #fff;
+          border-radius: 0 20px 20px 20px;
         }
-        &.question {
-          float: right;
-          text-align: right;
+      }
+      &.question {
+        justify-content: flex-end;
+        span {
           background: @themeColor;
           color: #fff;
           border-radius: 20px 0 20px 20px;
         }
+      }
+      span {
+        padding: 6px 15px;
+        max-width: 65%;
+        display: inline-block;
+        box-shadow: 0 0 5px #94beb1;
+        overflow: hidden;
+        word-wrap: break-word;
       }
     }
   }
