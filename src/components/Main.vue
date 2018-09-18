@@ -95,7 +95,7 @@ export default class Main extends Vue {
 </script>
 
 <style scoped lang="less">
-@themeColor: #2760bd;
+@themeColor: #7b90d2;
 .content {
   margin: auto;
   height: 100vh;
@@ -129,7 +129,7 @@ export default class Main extends Vue {
         position: absolute;
         top: 0;
         font-size: 10px;
-        color: #fffffb;
+        color: #006284; // 缥
         z-index: 5;
         display: block;
         width: auto;
@@ -138,7 +138,7 @@ export default class Main extends Vue {
         padding: 6px 15px;
         max-width: 65%;
         display: inline-block;
-        box-shadow: 0 0 5px #94beb1;
+        box-shadow: 0 1px 5px @themeColor;
         overflow: hidden;
         word-wrap: break-word;
       }
@@ -146,7 +146,7 @@ export default class Main extends Vue {
         justify-content: flex-start;
         left: 0;
         span {
-          border-radius: 0 20px 20px 20px;
+          border-radius: 0 15px 15px 15px;
         }
       }
       &.right {
@@ -157,8 +157,8 @@ export default class Main extends Vue {
         }
         span {
           color: #fcfaf2;
-          background: #7b90d2; // 红碧
-          border-radius: 20px 0 20px 20px;
+          background: @themeColor; // 红碧
+          border-radius: 15px 0 15px 15px;
         }
       }
       &.press {
@@ -171,51 +171,98 @@ export default class Main extends Vue {
       }
       &.eagle {
         &:before {
-          content: '夜鹰 蓝墨茶';
+          content: '夜鹰 红掛花 & 蓝墨茶';
         }
         span {
-          background: #373c38; // 蓝墨茶
+          // background: #373c38; // 蓝墨茶
+          background: linear-gradient(to right,#4E4F97 10%, #373c38);
           // background: #8e354a; // 桑染
           color: #fffffb;
         }
       }
       &.eleven {
         &:before {
-          content: '十一 黄丹';
+          content: '十一 纁 & 黄丹  ';
         }
         span {
-          background: #f05e1c; // 黄丹
+          background: linear-gradient(to right, #ED784A 10%, #f05e1c);
+          // background: #f05e1c; // 黄丹
           color: #fffffb;
         }
       }
       &.dove {
         &:before {
-          content: '白鸽 抚子';
+          content: '白鸽 退红 & 桃';
         }
         span {
-          background: #dc9fb4; // 抚子 + 一斥染 #F4A7B9
+          background: linear-gradient(to right,#F8C3CD 20%, #F596AA); // 退红 + 桃
           color: #fffffb;
         }
       }
       &.falcon {
         &:before {
-          content: '夜隼 锖青磁';
+          content: '夜隼 老竹 & 锖青磁';
         }
         span {
           background: #86a697; // 锖青磁
+          background: linear-gradient(to right,#86a697 20%, #6A8372);
           // background: #373c38; // 蓝墨茶
           color: #fffffb;
         }
       }
-      // 豹子 #0089A7 新桥
+      &.leopard {
+        &:before {
+          content: '青豹 水浅葱 & 新桥';
+        }
+        span {
+          background: linear-gradient(to right,#66BAB7 20%, #0089A7);
+          color: #fffffb;
+        }
+      }
+      &.sky {
+        &:before {
+          content: '天啸 苏芳香 & 海老茶';
+        }
+        span {
+          background: linear-gradient(to right,#A96360 20%, #734338);
+          color: #fffffb;
+        }
+      }
+      &.fire {
+        &:before {
+          content: '黑火 海松 & 千岁茶';
+        }
+        span {
+          background: linear-gradient(to right,#5B622E 20%, #4D5139);
+          color: #fffffb;
+        }
+      }
+      &.swallow {
+        &:before {
+          content: '夜燕 熨斗目花 & 缥';
+        }
+        span {
+          background: linear-gradient(to right,#2B5F75 20%, #006284);
+          color: #fffffb;
+        }
+      }
+      &.wolf {
+        &:before {
+          content: '小狼 银鼠 & 灰';
+        }
+        span {
+          background: linear-gradient(to right,#91989F 20%, #828282);
+          color: #fffffb;
+        }
+      }
     }
   }
   .title {
     position: absolute;
     background: @themeColor;
     color: #fff;
-    height: 40px;
-    line-height: 40px;
+    height: 45px;
+    line-height: 45px;
     padding: 0 10px;
     box-shadow: 0 0 5px #f1f1f1;
     border-radius: 2px;
@@ -230,7 +277,8 @@ export default class Main extends Vue {
     right: 0;
     top: 0;
     bottom: 40px;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 5;
     ul {
       position: absolute;
       bottom: 0;
@@ -273,15 +321,16 @@ export default class Main extends Vue {
     right: 0;
     color: #888;
     font-size: 13px;
-    box-shadow: 0 0 5px #afe0f8;
-    border-radius: 3px;
+    box-shadow: 0 0 20px @themeColor;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
   }
   .dot {
     position: relative;
     display: inline-block;
     width: 10px;
     height: 10px;
-    background: #c7e8f8;
+    background: @themeColor;
     border-radius: 50%;
     transform-origin: 50% 50%;
     animation: dotZoomIn 1.4s infinite;

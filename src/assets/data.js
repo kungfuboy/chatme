@@ -1,4 +1,22 @@
+// leopard 豹
+// Swallow 燕子
 export default {
+    // '0000': {
+    //     res:[
+    //         {user: 'eagle', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'eleven', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'dove', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'falcon', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'leopard', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'sky', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'fire', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'swallow', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //         {user: 'wolf', value: '南山巅上火麟烈，北海潜深雪饮寒。'},
+    //     ],
+    //     req: [
+    //         {value: '南山巅上火麟烈，北海潜深雪饮寒。', next: '0001'}
+    //     ]
+    // },
   '0000': {
     res: [
       { user: 'eagle', value: '你好，我叫夜鹰' },
@@ -26,7 +44,7 @@ export default {
     res: [
       { user: 'eagle', value: '呵呵，哦…' },
       { user: 'eleven', value: '呵呵，该！' },
-      { user: 'dove', value: '/偷笑' }
+      { user: 'dove', value: '/偷笑偷笑偷笑偷笑偷笑偷笑偷笑偷笑' }
     ],
     req: [{ value: '嗯？另外两位是谁？', next: '0006' }]
   },
