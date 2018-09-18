@@ -1,17 +1,17 @@
 <template>
   <div class="content">
-    <div class="title">{{inputing ? '对方正在输入……' : '和夜鹰聊天中'}}</div>
-    <div class="input" @click="saySome">{{inputing ? '夜鹰打字中……' : '说点什么吧...'}}</div>
+    <div class="title">{{inputing ? '对方正在输入……' : '武协内部聊天中'}}</div>
+    <div class="input" @click="saySome">{{inputing ? '对方打字中……' : '说点什么吧...'}}</div>
     <div class="talk" v-show="talkShow" @click="talkShow = false">
       <ul>
-        <li v-for="(item, index) in options" :key="index" @click="talkData(item)">{{item}}</li>
+        <li v-for="(item, index) in options" :key="index" @click="talkData(item)">{{item.value}}</li>
       </ul>
     </div>
     <ul class="chat-list" ref="chat">
-      <li v-for="(item, index) in talkArr" :class="item.type" :key="index">
+      <li v-for="(item, index) in talkArr" :class="item.user ? item.user + ' left' : 'right'" :key="index">
         <span>{{item.value}}</span>
       </li>
-      <li class="answer" v-show="inputing">
+      <li class="left press" v-show="inputing">
         <span>
           <i class="dot"></i>
           <i class="dot"></i>
@@ -23,24 +23,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import talkJson from '@/assets/data.js'
+import { Component, Vue } from 'vue-property-decorator'
+const talkJson: any = require('@/assets/data.js').default
 
 @Component
 export default class Main extends Vue {
   // data
-  private talkShow = false
-  private talkArr = []
-  private options = []
-  private inputing = false
+  private talkShow: boolean = false
+  private talkArr: any = []
+  private options: any = []
+  private inputing: boolean = false
 
   private mounted() {
-    this.talkArr.push({
-      type: 'answer',
-      value: '你好，我叫夜鹰！'
+    const key: string = '0000'
+    talkJson[key].res.forEach((item: any) => {
+      this.talkArr.push(item)
     })
-    const key = this.talkArr[this.talkArr.length - 1].value
-    this.options = talkJson[key].select
+    this.options = talkJson[key].req
   }
 
   // methods
@@ -48,52 +47,48 @@ export default class Main extends Vue {
     !this.inputing && (this.talkShow = true)
   }
 
-  private talkData(data: string): void {
+  private talkData(data: any): void {
     this.talkShow = false
-    this.inputing = true    // 输入状态
+    this.inputing = true // 输入状态
 
     // 提问处理
-    this.talkArr.push({ 
-      type: 'question',
-      value: data 
+    this.talkArr.push({
+      user: null,
+      value: data.value
     })
     this.updateScroll()
 
     // 回答处理
-    this.options = talkJson[data].select
+    this.options = talkJson[data.next].req
 
-    const ansData = talkJson[data].answer
-    const len = ansData.length - 1
+    const resData = talkJson[data.next].res
+    const len = resData.length - 1
     let i = 0
     const timer = setInterval(() => {
-      this.pushData(ansData[i])
-      if(i >= len) {
+      this.pushData(resData[i])
+      if (i >= len) {
         clearInterval(timer)
-        this.inputing = false   // 非输入状态
+        this.inputing = false // 非输入状态
       }
       this.updateScroll()
       i++
     }, 1200)
   }
 
-  private pushData(data): void {
-    this.talkArr.push({ 
-      type: 'answer',
-      value: data 
-    })
+  private pushData(data: any): void {
+    this.talkArr.push(data)
   }
 
   private updateScroll(): void {
-    const $dom = this.$refs.chat
-
-    const distance = $dom.scrollHeight - $dom.offsetHeight;
-    const duration = 250;
-    const startTime = Date.now();
+    const $dom: any = this.$refs.chat
+    const distance = $dom.scrollHeight - $dom.offsetHeight
+    const duration = 250
+    const startTime = Date.now()
 
     requestAnimationFrame(function step() {
-        const p = Math.min(1, (Date.now() - startTime) / duration);
-        $dom.scrollTop = $dom.scrollTop + distance * p
-        p < 1 && requestAnimationFrame(step);
+      const p = Math.min(1, (Date.now() - startTime) / duration)
+      $dom.scrollTop = $dom.scrollTop + distance * p
+      p < 1 && requestAnimationFrame(step)
     })
   }
 }
@@ -108,9 +103,11 @@ export default class Main extends Vue {
   max-width: 420px;
   box-sizing: border-box;
   position: relative;
-  background: #c7e8f8;
+  // background: #7db9de; // 勿忘草
+  background: #fff;
   padding: 45px 0;
   overflow: hidden;
+  background-image: url('../assets/images/texture.png');
   .chat-list {
     padding: 0;
     font-size: 13px;
@@ -119,28 +116,25 @@ export default class Main extends Vue {
     overflow: auto;
     padding: 0 15px;
     box-sizing: border-box;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     li {
       list-style: none;
-      padding: 0;
       display: flex;
       overflow: auto;
-      margin: 8px 0;
-      &.answer {
-        justify-content: flex-start;
-        span {
-          background: #fff;
-          border-radius: 0 20px 20px 20px;
-        }
+      padding: 18px 0 10px 0;
+      position: relative;
+      &:before {
+        position: absolute;
+        top: 0;
+        font-size: 10px;
+        color: #fffffb;
+        z-index: 5;
+        display: block;
+        width: auto;
       }
-      &.question {
-        justify-content: flex-end;
-        span {
-          background: @themeColor;
-          color: #fff;
-          border-radius: 20px 0 20px 20px;
-        }
-      }
-      span {
+      > span {
         padding: 6px 15px;
         max-width: 65%;
         display: inline-block;
@@ -148,6 +142,72 @@ export default class Main extends Vue {
         overflow: hidden;
         word-wrap: break-word;
       }
+      &.left {
+        justify-content: flex-start;
+        left: 0;
+        span {
+          border-radius: 0 20px 20px 20px;
+        }
+      }
+      &.right {
+        justify-content: flex-end;
+        right: 0;
+        &:before {
+          content: '红碧';
+        }
+        span {
+          color: #fcfaf2;
+          background: #7b90d2; // 红碧
+          border-radius: 20px 0 20px 20px;
+        }
+      }
+      &.press {
+        &:before {
+          content: '夜愿';
+        }
+        span {
+          background: #fffffb; // 胡粉
+        }
+      }
+      &.eagle {
+        &:before {
+          content: '夜鹰 蓝墨茶';
+        }
+        span {
+          background: #373c38; // 蓝墨茶
+          // background: #8e354a; // 桑染
+          color: #fffffb;
+        }
+      }
+      &.eleven {
+        &:before {
+          content: '十一 黄丹';
+        }
+        span {
+          background: #f05e1c; // 黄丹
+          color: #fffffb;
+        }
+      }
+      &.dove {
+        &:before {
+          content: '白鸽 抚子';
+        }
+        span {
+          background: #dc9fb4; // 抚子 + 一斥染 #F4A7B9
+          color: #fffffb;
+        }
+      }
+      &.falcon {
+        &:before {
+          content: '夜隼 锖青磁';
+        }
+        span {
+          background: #86a697; // 锖青磁
+          // background: #373c38; // 蓝墨茶
+          color: #fffffb;
+        }
+      }
+      // 豹子 #0089A7 新桥
     }
   }
   .title {
@@ -170,7 +230,7 @@ export default class Main extends Vue {
     right: 0;
     top: 0;
     bottom: 40px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     ul {
       position: absolute;
       bottom: 0;
@@ -226,31 +286,34 @@ export default class Main extends Vue {
     transform-origin: 50% 50%;
     animation: dotZoomIn 1.4s infinite;
     &:nth-child(1) {
-        animation-delay: -0.32s;
+      animation-delay: -0.32s;
     }
 
     &:nth-child(2) {
-        animation-delay: -0.16s;
+      animation-delay: -0.16s;
     }
 
     & + .dot {
-        margin-left: 5px;
+      margin-left: 5px;
     }
     @keyframes dotZoomIn {
-      from, 40%, 80%, 100% {
-          animation-timing-function: ease-in-out;
+      from,
+      40%,
+      80%,
+      100% {
+        animation-timing-function: ease-in-out;
       }
       from {
-          transform: scale(0);
+        transform: scale(0);
       }
       40% {
-          transform: scale(1);
+        transform: scale(1);
       }
       80% {
-          transform: scale(0);
+        transform: scale(0);
       }
       100% {
-          transform: scale(0);
+        transform: scale(0);
       }
     }
   }
