@@ -11,7 +11,7 @@
       <li v-for="(item, index) in talkArr" :class="item.user ? item.user + ' left' : 'right'" :key="index">
         <span>{{item.value}}</span>
       </li>
-      <li class="left press" v-show="inputing">
+      <li class="left wish" v-show="inputing">
         <span>
           <i class="dot"></i>
           <i class="dot"></i>
@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-const talkJson: any = require('@/assets/data.js').default
+const dataJSON: any = require('@/assets/data').default
 
 @Component
 export default class Main extends Vue {
@@ -36,10 +36,10 @@ export default class Main extends Vue {
 
   private mounted() {
     const key: string = '0000'
-    talkJson[key].res.forEach((item: any) => {
+    dataJSON[key].res.forEach((item: any) => {
       this.talkArr.push(item)
     })
-    this.options = talkJson[key].req
+    this.options = dataJSON[key].req
   }
 
   // methods
@@ -59,9 +59,9 @@ export default class Main extends Vue {
     this.updateScroll()
 
     // 回答处理
-    this.options = talkJson[data.next].req
+    this.options = dataJSON[data.next].req
 
-    const resData = talkJson[data.next].res
+    const resData = dataJSON[data.next].res
     const len = resData.length - 1
     let i = 0
     const timer = setInterval(() => {
@@ -96,6 +96,8 @@ export default class Main extends Vue {
 
 <style scoped lang="less">
 @themeColor: #7b90d2;
+@import '../assets/styles/peopleChat.less';
+
 .content {
   margin: auto;
   height: 100vh;
@@ -104,7 +106,7 @@ export default class Main extends Vue {
   box-sizing: border-box;
   position: relative;
   // background: #7db9de; // 勿忘草
-  background: #fff;
+  background: #fffffb;
   padding: 45px 0;
   overflow: hidden;
   background-image: url('../assets/images/texture.png');
@@ -161,105 +163,11 @@ export default class Main extends Vue {
           border-radius: 15px 0 15px 15px;
         }
       }
-      &.press {
-        &:before {
-          content: '夜愿';
-        }
-        span {
-          background: #fffffb; // 胡粉
-        }
-      }
-      &.eagle {
-        &:before {
-          content: '夜鹰 红掛花 & 蓝墨茶';
-        }
-        span {
-          // background: #373c38; // 蓝墨茶
-          background: linear-gradient(to right,#4E4F97 10%, #373c38);
-          // background: #8e354a; // 桑染
-          color: #fffffb;
-        }
-      }
-      &.eleven {
-        &:before {
-          content: '十一 纁 & 黄丹  ';
-        }
-        span {
-          background: linear-gradient(to right, #ED784A 10%, #f05e1c);
-          // background: #f05e1c; // 黄丹
-          color: #fffffb;
-        }
-      }
-      &.dove {
-        &:before {
-          content: '白鸽 退红 & 桃';
-        }
-        span {
-          background: linear-gradient(to right,#F8C3CD 20%, #F596AA); // 退红 + 桃
-          color: #fffffb;
-        }
-      }
-      &.falcon {
-        &:before {
-          content: '夜隼 老竹 & 锖青磁';
-        }
-        span {
-          background: #86a697; // 锖青磁
-          background: linear-gradient(to right,#86a697 20%, #6A8372);
-          // background: #373c38; // 蓝墨茶
-          color: #fffffb;
-        }
-      }
-      &.leopard {
-        &:before {
-          content: '青豹 水浅葱 & 新桥';
-        }
-        span {
-          background: linear-gradient(to right,#66BAB7 20%, #0089A7);
-          color: #fffffb;
-        }
-      }
-      &.sky {
-        &:before {
-          content: '天啸 苏芳香 & 海老茶';
-        }
-        span {
-          background: linear-gradient(to right,#A96360 20%, #734338);
-          color: #fffffb;
-        }
-      }
-      &.fire {
-        &:before {
-          content: '黑火 海松 & 千岁茶';
-        }
-        span {
-          background: linear-gradient(to right,#5B622E 20%, #4D5139);
-          color: #fffffb;
-        }
-      }
-      &.swallow {
-        &:before {
-          content: '夜燕 熨斗目花 & 缥';
-        }
-        span {
-          background: linear-gradient(to right,#2B5F75 20%, #006284);
-          color: #fffffb;
-        }
-      }
-      &.wolf {
-        &:before {
-          content: '小狼 银鼠 & 灰';
-        }
-        span {
-          background: linear-gradient(to right,#91989F 20%, #828282);
-          color: #fffffb;
-        }
-      }
     }
   }
   .title {
     position: absolute;
-    background: @themeColor;
+    background: linear-gradient(to right, #7b90d2, #2ea9df, #7b90d2);
     color: #fff;
     height: 45px;
     line-height: 45px;
@@ -321,7 +229,7 @@ export default class Main extends Vue {
     right: 0;
     color: #888;
     font-size: 13px;
-    box-shadow: 0 0 20px @themeColor;
+    box-shadow: 0 0 3px @themeColor;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
